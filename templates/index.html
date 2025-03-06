@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo GSI / AI</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Boxicons for icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-sm: 0.25rem;
+            --radius: 0.5rem;
+            --radius-lg: 0.75rem;
+            --transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary: #6366f1;
+            --primary-hover: #818cf8;
+            --secondary: #1f2937;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --border: #374151;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+            overflow: hidden; /* Prevent scrollbars on the body */
+        }
+
+        .container {
+            height: 100vh;
+            width: 100vw;
+            display: grid;
+            grid-template-columns: auto 1fr 350px;
+            grid-template-rows: 1fr;
+            transition: var(--transition);
+            overflow: hidden; /* Prevent scrollbars on the container */
+        }
+
+        .sidebar {
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            transition: var(--transition);
+            overflow: hidden; /* Prevent scrollbars on the sidebar */
+        }
+
+        .sidebar-logo {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-button {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: none;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .sidebar-button:hover {
+            background-color: var(--secondary);
+            color: var(--primary);
+        }
+
+        .sidebar-button.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .sidebar-button.active:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .theme-toggle {
+            margin-top: auto;
+        }
+
+        .main-panel {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow: hidden; /* Prevent scrollbars on the main panel */
+            transition: var(--transition);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background-color: var(--success);
+        }
+
+        .video-container {
+            flex: 1;
+            width: 100%;
+            min-height: 0;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background-color: var(--bg-secondary);
+            position: relative;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-feed {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .video-overlay {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .video-overlay i {
+            color: var(--success);
+        }
+
+        .status-bar {
+            background-color: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notifications-panel {
+            background-color: var(--bg-secondary);
+            border-left: 1px solid var(--border);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            transition: var(--transition);
+            overflow: hidden; /* Prevent scrollbars on the notifications panel itself */
+        }
+
+        .notifications-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notifications-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .notifications-count {
+            background-color: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+        }
+
+        /* Faces carousel */
+        .faces-carousel {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .faces-carousel-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .faces-carousel-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .faces-carousel-container::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .faces-carousel-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .faces-carousel-container::-webkit-scrollbar-thumb {
+            background-color: var(--border);
+            border-radius: var(--radius);
+        }
+
+        .face-bubble {
+            flex: 0 0 auto;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .face-bubble:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-hover);
+        }
+
+        .face-bubble img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .face-bubble-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-primary);
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+        }
+
+        .notifications-list {
+            list-style: none;
+            overflow-y: auto; /* Only allow vertical scrolling in the notifications list */
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding-right: 0.5rem; /* Add some padding for the scrollbar */
+        }
+
+        .notification-item {
+            background-color: var(--bg-primary);
+            border-radius: var(--radius);
+            padding: 1rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .notification-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .notification-title {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notification-timestamp {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .notification-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .motion-details, .face-details {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .motion-roi {
+            max-width: 80px;
+            max-height: 60px;
+            object-fit: cover;
+            border: 2px solid var(--success);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .motion-roi:hover {
+            transform: scale(1.05);
+        }
+
+        .face-roi {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .face-roi:hover {
+            transform: scale(1.1);
+        }
+
+        .notification-frame {
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .notification-frame:hover {
+            transform: scale(1.02);
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            padding: 0.5rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            width: 400px;
+            max-width: 90%;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .webhook-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .webhook-input {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .webhook-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+
+        .webhook-button {
+            padding: 0.75rem 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .webhook-button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 1rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateY(150%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-width: 350px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        .toast-icon {
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-message {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .toast-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-close:hover {
+            color: var(--danger);
+        }
+
+        .toast.success {
+            border-left-color: var(--success);
+        }
+
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+
+        .toast.error .toast-icon {
+            color: var(--danger);
+        }
+
+        /* Custom scrollbar for notifications list */
+        .notifications-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .notifications-list::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+        }
+
+        .notifications-list::-webkit-scrollbar-thumb {
+            background-color: var(--border);
+            border-radius: var(--radius);
+        }
+
+        .notifications-list::-webkit-scrollbar-thumb:hover {
+            background-color: var(--text-secondary);
+        }
+
+        /* Image viewer modal */
+        .image-viewer-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            cursor: zoom-out;
+        }
+
+        .image-viewer-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .image-viewer-img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .image-viewer-close {
+            position: absolute;
+            top: -2rem;
+            right: 0;
+            color: white;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .image-viewer-close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: auto 1fr;
+            }
+
+            .notifications-panel {
+                position: fixed;
+                top: 0;
+                right: 0;
+                height: 100%;
+                width: 300px;
+                transform: translateX(100%);
+                z-index: 100;
+                box-shadow: var(--shadow-lg);
+            }
+
+            .notifications-panel.show {
+                transform: translateX(0);
+            }
+
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 90;
+            }
+
+            .overlay.show {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr auto;
+            }
+
+            .sidebar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 0.75rem;
+                z-index: 50;
+                border-top: 1px solid var(--border);
+                border-right: none;
+            }
+
+            .sidebar-logo, .theme-toggle {
+                display: none;
+            }
+
+            .main-panel {
+                padding: 1rem;
+                padding-bottom: 4rem; /* Add space for the fixed bottom sidebar */
+            }
+
+            .status-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <i class='bx bx-video'></i>
+            </div>
+            <button class="sidebar-button active" id="streamBtn" title="Stream">
+                <i class='bx bx-video'></i>
+            </button>
+            <button class="sidebar-button" id="openConfig" title="Configuración">
+                <i class='bx bx-cog'></i>
+            </button>
+            <button class="sidebar-button theme-toggle" id="themeToggle" title="Cambiar tema">
+                <i class='bx bx-moon'></i>
+            </button>
+        </div>
+
+        <div class="main-panel">
+            <div class="header">
+                <h1>Demo GSI / AI</h1>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>En vivo</span>
+                </div>
+            </div>
+            <div class="video-container">
+                <img src="/video_feed" class="video-feed" alt="Video Stream">
+                <div class="video-overlay">
+                    <i class='bx bx-broadcast'></i>
+                    <span>Transmitiendo en vivo</span>
+                </div>
+            </div>
+            <div class="status-bar">
+                <div class="status-item">
+                    <i class='bx bx-check-circle'></i>
+                    <span>Estado: Conectado</span>
+                </div>
+                <div class="status-item">
+                    <i class='bx bx-fullscreen'></i>
+                    <span>Resolución: 640x480</span>
+                </div>
+                <div class="status-item">
+                    <i class='bx bx-timer'></i>
+                    <span>FPS: Variable</span>
+                </div>
+            </div>
+            <div class="footer">
+                Powered by GSInnovations
+            </div>
+        </div>
+
+        <div class="notifications-panel" id="notificationsPanel">
+            <div class="notifications-header">
+                <h2 class="notifications-title">Notificaciones</h2>
+                <span class="notifications-count" id="notificationsCount">0</span>
+            </div>
+            
+            <!-- Faces carousel -->
+            <div class="faces-carousel">
+                <div class="faces-carousel-title">
+                    <i class='bx bx-face'></i>
+                    <span>Catálogo de Rostros</span>
+                </div>
+                <div class="faces-carousel-container" id="facesCarousel">
+                    <!-- Faces will be added here -->
+                    <div class="face-bubble face-bubble-empty">
+                        <i class='bx bx-user'></i>
+                    </div>
+                </div>
+            </div>
+            
+            <ul class="notifications-list" id="notificationsList">
+                <!-- Notificaciones aparecerán aquí -->
+            </ul>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="modal" id="configModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Configuración de Webhook</h2>
+                <button class="modal-close" id="closeModal">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <form class="webhook-form" id="webhookForm">
+                <div class="form-group">
+                    <label for="webhookUrl" class="form-label">URL del Webhook</label>
+                    <input 
+                        type="url" 
+                        class="webhook-input" 
+                        id="webhookUrl" 
+                        placeholder="https://tu-webhook-endpoint.com" 
+                        required
+                    >
+                </div>
+                <button type="submit" class="webhook-button">
+                    <i class='bx bx-save'></i>
+                    <span>Guardar</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Image viewer modal -->
+    <div class="image-viewer-modal" id="imageViewerModal">
+        <div class="image-viewer-content">
+            <button class="image-viewer-close" id="imageViewerClose">
+                <i class='bx bx-x'></i>
+            </button>
+            <img src="/placeholder.svg" alt="Imagen ampliada" class="image-viewer-img" id="imageViewerImg">
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <div class="toast-icon">
+            <i class='bx bx-check-circle'></i>
+        </div>
+        <div class="toast-content">
+            <div class="toast-title" id="toastTitle">Éxito</div>
+            <div class="toast-message" id="toastMessage">Operación completada correctamente</div>
+        </div>
+        <button class="toast-close" id="toastClose">
+            <i class='bx bx-x'></i>
+        </button>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or use system preference
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeIcon.classList.replace('bx-moon', 'bx-sun');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.replace('bx-sun', 'bx-moon');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.replace('bx-moon', 'bx-sun');
+            }
+        });
+
+        // Video feed refresh
+        const img = document.querySelector('.video-feed');
+        setInterval(() => {
+            img.src = '/video_feed?' + new Date().getTime();
+        }, 1000);
+
+        // Modal functionality
+        const modal = document.getElementById('configModal');
+        const openConfigBtn = document.getElementById('openConfig');
+        const closeModalBtn = document.getElementById('closeModal');
+        const webhookForm = document.getElementById('webhookForm');
+
+        openConfigBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Image viewer modal functionality
+        const imageViewerModal = document.getElementById('imageViewerModal');
+        const imageViewerImg = document.getElementById('imageViewerImg');
+        const imageViewerClose = document.getElementById('imageViewerClose');
+
+        function openImageViewer(imgSrc) {
+            imageViewerImg.src = imgSrc;
+            imageViewerModal.style.display = 'flex';
+        }
+
+        imageViewerClose.addEventListener('click', () => {
+            imageViewerModal.style.display = 'none';
+        });
+
+        imageViewerModal.addEventListener('click', (e) => {
+            if (e.target === imageViewerModal) {
+                imageViewerModal.style.display = 'none';
+            }
+        });
+
+        // Toast notification system
+        const toast = document.getElementById('toast');
+        const toastTitle = document.getElementById('toastTitle');
+        const toastMessage = document.getElementById('toastMessage');
+        const toastClose = document.getElementById('toastClose');
+        const toastIcon = toast.querySelector('.toast-icon i');
+
+        function showToast(type, title, message, duration = 3000) {
+            toast.className = 'toast ' + type;
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            
+            if (type === 'success') {
+                toastIcon.className = 'bx bx-check-circle';
+            } else if (type === 'error') {
+                toastIcon.className = 'bx bx-error-circle';
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        toastClose.addEventListener('click', () => {
+            toast.classList.remove('show');
+        });
+
+        // Webhook form submission
+        webhookForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('webhookUrl').value;
+            
+            try {
+                const response = await fetch('/set_webhook', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ webhook_url: url })
+                });
+                
+                if (response.ok) {
+                    showToast('success', 'Webhook guardado', 'La URL del webhook se ha guardado correctamente');
+                    modal.style.display = 'none';
+                } else {
+                    showToast('error', 'Error', 'No se pudo guardar la URL del webhook');
+                }
+            } catch (error) {
+                showToast('error', 'Error de conexión', error.message);
+            }
+        });
+
+        // Function to format relative time
+        function formatRelativeTime(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (isNaN(diffInSeconds)) {
+                return dateString; // Return original if parsing failed
+            }
+            
+            // Just now
+            if (diffInSeconds < 5) {
+                return "Justo ahora";
+            }
+            
+            // Less than a minute
+            if (diffInSeconds < 60) {
+                return "Hace unos segundos";
+            }
+            
+            // Minutes
+            const diffInMinutes = Math.floor(diffInSeconds / 60);
+            if (diffInMinutes === 1) {
+                return "Hace un minuto";
+            }
+            if (diffInMinutes < 60) {
+                return `Hace ${diffInMinutes} minutos`;
+            }
+            
+            // Hours
+            const diffInHours = Math.floor(diffInMinutes / 60);
+            if (diffInHours === 1) {
+                return "Hace una hora";
+            }
+            if (diffInHours < 24) {
+                return `Hace ${diffInHours} horas`;
+            }
+            
+            // Days
+            const diffInDays = Math.floor(diffInHours / 24);
+            if (diffInDays === 1) {
+                return "Hace un día";
+            }
+            if (diffInDays < 7) {
+                return `Hace ${diffInDays} días`;
+            }
+            
+            // Weeks
+            const diffInWeeks = Math.floor(diffInDays / 7);
+            if (diffInWeeks === 1) {
+                return "Hace una semana";
+            }
+            if (diffInWeeks < 4) {
+                return `Hace ${diffInWeeks} semanas`;
+            }
+            
+            // Months
+            const diffInMonths = Math.floor(diffInDays / 30);
+            if (diffInMonths === 1) {
+                return "Hace un mes";
+            }
+            if (diffInMonths < 12) {
+                return `Hace ${diffInMonths} meses`;
+            }
+            
+            // Years
+            const diffInYears = Math.floor(diffInDays / 365);
+            if (diffInYears === 1) {
+                return "Hace un año";
+            }
+            return `Hace ${diffInYears} años`;
+        }
+
+        // Faces carousel functionality
+        const facesCarousel = document.getElementById('facesCarousel');
+        let uniqueFaces = new Set(); // Store unique face images
+
+        function addFaceToCarousel(faceBase64) {
+            // Skip if this face is already in the carousel
+            if (uniqueFaces.has(faceBase64)) {
+                return;
+            }
+            
+            // Add to our set of unique faces
+            uniqueFaces.add(faceBase64);
+            
+            // Remove empty placeholder if it exists
+            const emptyPlaceholder = facesCarousel.querySelector('.face-bubble-empty');
+            if (emptyPlaceholder) {
+                facesCarousel.removeChild(emptyPlaceholder);
+            }
+            
+            // Create face bubble
+            const faceBubble = document.createElement('div');
+            faceBubble.className = 'face-bubble';
+            
+            const faceImg = document.createElement('img');
+            faceImg.src = `data:image/jpeg;base64,${faceBase64}`;
+            faceImg.alt = 'Rostro detectado';
+            
+            faceBubble.appendChild(faceImg);
+            faceBubble.addEventListener('click', () => {
+                openImageViewer(faceImg.src);
+            });
+            
+            // Add to carousel
+            facesCarousel.appendChild(faceBubble);
+            
+            // Scroll to the end to show the newest face
+            facesCarousel.scrollLeft = facesCarousel.scrollWidth;
+        }
+
+        // Notifications functionality
+        const notificationsList = document.getElementById('notificationsList');
+        const notificationsCount = document.getElementById('notificationsCount');
+        let notificationsData = [];
+
+        async function updateNotifications() {
+            try {
+                const response = await fetch('/get_notifications');
+                const notifications = await response.json();
+                
+                // Update count
+                notificationsCount.textContent = notifications.length;
+                
+                // Only update DOM if there are new notifications
+                if (JSON.stringify(notifications) !== JSON.stringify(notificationsData)) {
+                    notificationsData = notifications;
+                    renderNotifications(notifications);
+                    
+                    // Update faces carousel with all faces from notifications
+                    notifications.forEach(notif => {
+                        if (notif.faces_detected > 0 && notif.face_rois && notif.face_rois.length > 0) {
+                            notif.face_rois.forEach(roi => {
+                                addFaceToCarousel(roi);
+                            });
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error al actualizar notificaciones:', error);
+            }
+        }
+
+        function renderNotifications(notifications) {
+            notificationsList.innerHTML = '';
+            
+            if (notifications.length === 0) {
+                const emptyMessage = document.createElement('div');
+                emptyMessage.style.textAlign = 'center';
+                emptyMessage.style.padding = '2rem 0';
+                emptyMessage.style.color = 'var(--text-secondary)';
+                emptyMessage.innerHTML = '<i class="bx bx-bell-off" style="font-size: 2rem; margin-bottom: 0.5rem;"></i><p>No hay notificaciones</p>';
+                notificationsList.appendChild(emptyMessage);
+                return;
+            }
+            
+            notifications.forEach(notif => {
+                const li = document.createElement('li');
+                li.className = 'notification-item';
+                
+                const header = document.createElement('div');
+                header.className = 'notification-header';
+                
+                const title = document.createElement('div');
+                title.className = 'notification-title';
+                
+                // Add appropriate icon based on detection
+                if (notif.faces_detected > 0) {
+                    title.innerHTML = `<i class='bx bx-face'></i>`;
+                } else {
+                    title.innerHTML = `<i class='bx bx-movement'></i>`;
+                }
+                
+                title.innerHTML += `<span>${notif.motion_objects} movimiento(s), ${notif.faces_detected} rostro(s)</span>`;
+                
+                const timestamp = document.createElement('span');
+                timestamp.className = 'notification-timestamp';
+                timestamp.textContent = formatRelativeTime(notif.timestamp);
+                timestamp.title = notif.timestamp; // Original timestamp as tooltip
+                
+                header.appendChild(title);
+                header.appendChild(timestamp);
+                
+                const content = document.createElement('div');
+                content.className = 'notification-content';
+                
+                // Only add motion details if there are motion objects
+                if (notif.motion_objects > 0 && notif.motion_rois && notif.motion_rois.length > 0) {
+                    const motionDetails = document.createElement('div');
+                    motionDetails.className = 'motion-details';
+                    notif.motion_rois.forEach(roi => {
+                        const img = document.createElement('img');
+                        img.className = 'motion-roi';
+                        img.src = `data:image/jpeg;base64,${roi}`;
+                        img.alt = 'Área de movimiento';
+                        img.addEventListener('click', () => {
+                            openImageViewer(img.src);
+                        });
+                        motionDetails.appendChild(img);
+                    });
+                    content.appendChild(motionDetails);
+                }
+                
+                // Only add face details if there are faces detected
+                if (notif.faces_detected > 0 && notif.face_rois && notif.face_rois.length > 0) {
+                    const faceDetails = document.createElement('div');
+                    faceDetails.className = 'face-details';
+                    notif.face_rois.forEach(roi => {
+                        const img = document.createElement('img');
+                        img.className = 'face-roi';
+                        img.src = `data:image/jpeg;base64,${roi}`;
+                        img.alt = 'Rostro detectado';
+                        img.addEventListener('click', () => {
+                            openImageViewer(img.src);
+                        });
+                        faceDetails.appendChild(img);
+                    });
+                    content.appendChild(faceDetails);
+                }
+                
+                // Add the full frame image
+                if (notif.frame) {
+                    const frameImg = document.createElement('img');
+                    frameImg.className = 'notification-frame';
+                    frameImg.src = `data:image/jpeg;base64,${notif.frame}`;
+                    frameImg.alt = 'Imagen completa';
+                    frameImg.addEventListener('click', () => {
+                        openImageViewer(frameImg.src);
+                    });
+                    content.appendChild(frameImg);
+                }
+                
+                li.appendChild(header);
+                li.appendChild(content);
+                notificationsList.prepend(li);
+            });
+        }
+
+        // Update timestamps every minute
+        function updateTimestamps() {
+            const timestamps = document.querySelectorAll('.notification-timestamp');
+            timestamps.forEach(timestamp => {
+                const originalTime = timestamp.title;
+                if (originalTime) {
+                    timestamp.textContent = formatRelativeTime(originalTime);
+                }
+            });
+        }
+
+        // Initial notifications update and set intervals
+        updateNotifications();
+        setInterval(updateNotifications, 2000);
+        setInterval(updateTimestamps, 60000); // Update relative times every minute
+
+        // Load saved webhook URL if available
+        async function loadSavedWebhook() {
+            try {
+                const response = await fetch('/get_webhook');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.webhook_url) {
+                        document.getElementById('webhookUrl').value = data.webhook_url;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading webhook:', error);
+            }
+        }
+        
+        loadSavedWebhook();
+    </script>
+</body>
+</html>
