@@ -40,6 +40,9 @@ Asegúrate de que la ruta en el código apunte a tu instalación:
 ```bash
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 ```
+# Variables de entorno necesarias
+
+Se requiere la variable de entorno `OPENAI_API_KEY` (https://platform.openai.com/api-keys)
 
 # Instalación
 1. Clona el repositorio:
