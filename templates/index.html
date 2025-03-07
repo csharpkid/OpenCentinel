@@ -20,9 +20,9 @@
             --bg-primary: #ffffff;
             --bg-secondary: #f9fafb;
             --border: #e5e7eb;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
+            --success: #10b981; /* Verde para neutral */
+            --warning: #f59e0b; /* Amarillo para medio */
+            --danger: #ef4444;  /* Rojo para crítico */
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -56,7 +56,7 @@
             color: var(--text-primary);
             background-color: var(--bg-primary);
             transition: var(--transition);
-            overflow: hidden; /* Prevent scrollbars on the body */
+            overflow: hidden;
         }
 
         .container {
@@ -66,7 +66,7 @@
             grid-template-columns: auto 1fr 350px;
             grid-template-rows: 1fr;
             transition: var(--transition);
-            overflow: hidden; /* Prevent scrollbars on the container */
+            overflow: hidden;
         }
 
         .sidebar {
@@ -78,13 +78,7 @@
             align-items: center;
             gap: 1.5rem;
             transition: var(--transition);
-            overflow: hidden; /* Prevent scrollbars on the sidebar */
-        }
-
-        .sidebar-logo {
-            font-size: 1.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
+            overflow: hidden;
         }
 
         .sidebar-button {
@@ -125,7 +119,7 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            overflow: hidden; /* Prevent scrollbars on the main panel */
+            overflow: hidden;
             transition: var(--transition);
         }
 
@@ -195,6 +189,29 @@
             color: var(--success);
         }
 
+        .analyze-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .analyze-button:hover {
+            background-color: var(--primary-hover);
+        }
+
         .status-bar {
             background-color: var(--bg-secondary);
             padding: 1rem;
@@ -221,13 +238,15 @@
             flex-direction: column;
             gap: 1.5rem;
             transition: var(--transition);
-            overflow: hidden; /* Prevent scrollbars on the notifications panel itself */
+            overflow: hidden;
         }
 
         .notifications-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         .notifications-title {
@@ -236,16 +255,83 @@
             color: var(--text-primary);
         }
 
-        .notifications-count {
-            background-color: var(--primary);
+        .export-button {
+            background-color: var(--success);
             color: white;
-            font-size: 0.75rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
             font-weight: 500;
-            padding: 0.25rem 0.5rem;
-            border-radius: 9999px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
         }
 
-        /* Faces carousel */
+        .export-button:hover {
+            background-color: #0d9f6e;
+        }
+
+        .recent-analysis-carousel {
+            background-color: var(--bg-primary);
+            border-radius: var(--radius);
+            padding: 1rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            overflow-x: auto;
+            display: flex;
+            gap: 1rem;
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .recent-analysis-item {
+            flex: 0 0 200px;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid var(--border);
+        }
+
+        .recent-analysis-item.neutral {
+            border-color: var(--success); /* Verde */
+        }
+
+        .recent-analysis-item.medium {
+            border-color: var(--warning); /* Amarillo */
+        }
+
+        .recent-analysis-item.critical {
+            border-color: var(--danger); /* Rojo */
+        }
+
+        .recent-analysis-item:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow);
+        }
+
+        .recent-analysis-preview {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.5rem;
+        }
+
+        .recent-analysis-timestamp {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
         .faces-carousel {
             display: flex;
             flex-direction: column;
@@ -271,19 +357,6 @@
             scrollbar-color: var(--border) transparent;
         }
 
-        .faces-carousel-container::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .faces-carousel-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .faces-carousel-container::-webkit-scrollbar-thumb {
-            background-color: var(--border);
-            border-radius: var(--radius);
-        }
-
         .face-bubble {
             flex: 0 0 auto;
             width: 50px;
@@ -293,7 +366,6 @@
             overflow: hidden;
             cursor: pointer;
             transition: var(--transition);
-            position: relative;
         }
 
         .face-bubble:hover {
@@ -318,12 +390,12 @@
 
         .notifications-list {
             list-style: none;
-            overflow-y: auto; /* Only allow vertical scrolling in the notifications list */
+            overflow-y: auto;
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            padding-right: 0.5rem; /* Add some padding for the scrollbar */
+            padding-right: 0.5rem;
         }
 
         .notification-item {
@@ -331,13 +403,26 @@
             border-radius: var(--radius);
             padding: 1rem;
             box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             transition: var(--transition);
+            cursor: pointer;
         }
 
         .notification-item:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow);
+        }
+
+        .notification-item.neutral {
+            border-color: var(--success); /* Verde */
+        }
+
+        .notification-item.medium {
+            border-color: var(--warning); /* Amarillo */
+        }
+
+        .notification-item.critical {
+            border-color: var(--danger); /* Rojo */
         }
 
         .notification-header {
@@ -365,40 +450,6 @@
             gap: 0.75rem;
         }
 
-        .motion-details, .face-details {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .motion-roi {
-            max-width: 80px;
-            max-height: 60px;
-            object-fit: cover;
-            border: 2px solid var(--success);
-            border-radius: var(--radius-sm);
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .motion-roi:hover {
-            transform: scale(1.05);
-        }
-
-        .face-roi {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid var(--primary);
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .face-roi:hover {
-            transform: scale(1.1);
-        }
-
         .notification-frame {
             max-width: 100%;
             height: auto;
@@ -412,11 +463,30 @@
             transform: scale(1.02);
         }
 
-        .footer {
-            text-align: center;
-            color: var(--text-secondary);
+        .notification-analysis-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
             font-size: 0.75rem;
-            padding: 0.5rem;
+            font-weight: 500;
+            margin-left: auto;
+            gap: 0.25rem;
+        }
+
+        .notification-analysis-badge.neutral {
+            background-color: var(--success); /* Verde */
+            color: white;
+        }
+
+        .notification-analysis-badge.medium {
+            background-color: var(--warning); /* Amarillo */
+            color: white;
+        }
+
+        .notification-analysis-badge.critical {
+            background-color: var(--danger); /* Rojo */
+            color: white;
         }
 
         .modal {
@@ -526,6 +596,60 @@
             background-color: var(--primary-hover);
         }
 
+        .ai-analysis-modal .modal-content {
+            width: 600px;
+            max-width: 90%;
+        }
+
+        .ai-analysis-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .ai-analysis-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .ai-analysis-result {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .ai-analysis-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 2rem 0;
+        }
+
+        .ai-analysis-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         .toast {
             position: fixed;
             bottom: 1.5rem;
@@ -599,14 +723,8 @@
             color: var(--danger);
         }
 
-        /* Custom scrollbar for notifications list */
         .notifications-list::-webkit-scrollbar {
             width: 6px;
-        }
-
-        .notifications-list::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-            border-radius: var(--radius);
         }
 
         .notifications-list::-webkit-scrollbar-thumb {
@@ -614,11 +732,6 @@
             border-radius: var(--radius);
         }
 
-        .notifications-list::-webkit-scrollbar-thumb:hover {
-            background-color: var(--text-secondary);
-        }
-
-        /* Image viewer modal */
         .image-viewer-modal {
             display: none;
             position: fixed;
@@ -632,12 +745,6 @@
             align-items: center;
             padding: 2rem;
             cursor: zoom-out;
-        }
-
-        .image-viewer-content {
-            max-width: 90%;
-            max-height: 90%;
-            position: relative;
         }
 
         .image-viewer-img {
@@ -670,85 +777,89 @@
             background-color: rgba(255, 255, 255, 0.2);
         }
 
-        @media (max-width: 1024px) {
-            .container {
-                grid-template-columns: auto 1fr;
-            }
-
-            .notifications-panel {
-                position: fixed;
-                top: 0;
-                right: 0;
-                height: 100%;
-                width: 300px;
-                transform: translateX(100%);
-                z-index: 100;
-                box-shadow: var(--shadow-lg);
-            }
-
-            .notifications-panel.show {
-                transform: translateX(0);
-            }
-
-            .overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 90;
-            }
-
-            .overlay.show {
-                display: block;
-            }
+        .auto-analysis-settings {
+            background-color: var(--bg-primary);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid var(--border);
         }
 
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-                grid-template-rows: 1fr auto;
-            }
+        .auto-analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
 
-            .sidebar {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: auto;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 0.75rem;
-                z-index: 50;
-                border-top: 1px solid var(--border);
-                border-right: none;
-            }
+        .auto-analysis-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-            .sidebar-logo, .theme-toggle {
-                display: none;
-            }
+        .auto-analysis-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
 
-            .main-panel {
-                padding: 1rem;
-                padding-bottom: 4rem; /* Add space for the fixed bottom sidebar */
-            }
+        .auto-analysis-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-            .status-bar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
+        .auto-analysis-option input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .auto-analysis-option label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .ai-analysis-badges {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            gap: 0.25rem;
+        }
+
+        .ai-badge.neutral {
+            background-color: var(--success); /* Verde */
+            color: white;
+        }
+
+        .ai-badge.medium {
+            background-color: var(--warning); /* Amarillo */
+            color: white;
+        }
+
+        .ai-badge.critical {
+            background-color: var(--danger); /* Rojo */
+            color: white;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="sidebar">
-            <div class="sidebar-logo">
-                <i class='bx bx-video'></i>
-            </div>
             <button class="sidebar-button active" id="streamBtn" title="Stream">
                 <i class='bx bx-video'></i>
             </button>
@@ -769,11 +880,15 @@
                 </div>
             </div>
             <div class="video-container">
-                <img src="/video_feed" class="video-feed" alt="Video Stream">
+                <img src="/video_feed" class="video-feed" alt="Video Stream" id="videoFeed">
                 <div class="video-overlay">
                     <i class='bx bx-broadcast'></i>
                     <span>Transmitiendo en vivo</span>
                 </div>
+                <button class="analyze-button" id="analyzeButton">
+                    <i class='bx bx-analyse'></i>
+                    <span>Analizar con IA</span>
+                </button>
             </div>
             <div class="status-bar">
                 <div class="status-item">
@@ -789,6 +904,28 @@
                     <span>FPS: Variable</span>
                 </div>
             </div>
+            <div class="auto-analysis-settings">
+                <div class="auto-analysis-header">
+                    <div class="auto-analysis-title">
+                        <i class='bx bx-analyse'></i>
+                        <span>Análisis Automático</span>
+                    </div>
+                </div>
+                <div class="auto-analysis-options">
+                    <div class="auto-analysis-option">
+                        <input type="checkbox" id="autoAnalysisToggle" value="auto">
+                        <label for="autoAnalysisToggle">Activar (cada 5s)</label>
+                    </div>
+                    <div class="auto-analysis-option">
+                        <input type="checkbox" id="analyzeAllToggle" value="analyzeAll">
+                        <label for="analyzeAllToggle">Analizar Todos</label>
+                    </div>
+                    <div class="auto-analysis-option">
+                        <input type="checkbox" id="disableAnalysisToggle" value="disable">
+                        <label for="disableAnalysisToggle">Desactivar</label>
+                    </div>
+                </div>
+            </div>
             <div class="footer">
                 Powered by GSInnovations
             </div>
@@ -797,30 +934,26 @@
         <div class="notifications-panel" id="notificationsPanel">
             <div class="notifications-header">
                 <h2 class="notifications-title">Notificaciones</h2>
-                <span class="notifications-count" id="notificationsCount">0</span>
+                <button class="export-button" id="exportButton">
+                    <i class='bx bx-download'></i>
+                    <span>Exportar CSV</span>
+                </button>
             </div>
-            
-            <!-- Faces carousel -->
+            <div class="recent-analysis-carousel" id="recentAnalysisCarousel"></div>
             <div class="faces-carousel">
                 <div class="faces-carousel-title">
                     <i class='bx bx-face'></i>
                     <span>Catálogo de Rostros</span>
                 </div>
                 <div class="faces-carousel-container" id="facesCarousel">
-                    <!-- Faces will be added here -->
                     <div class="face-bubble face-bubble-empty">
                         <i class='bx bx-user'></i>
                     </div>
                 </div>
             </div>
-            
-            <ul class="notifications-list" id="notificationsList">
-                <!-- Notificaciones aparecerán aquí -->
-            </ul>
+            <ul class="notifications-list" id="notificationsList"></ul>
         </div>
     </div>
-
-    <div class="overlay" id="overlay"></div>
 
     <div class="modal" id="configModal">
         <div class="modal-content">
@@ -833,13 +966,7 @@
             <form class="webhook-form" id="webhookForm">
                 <div class="form-group">
                     <label for="webhookUrl" class="form-label">URL del Webhook</label>
-                    <input 
-                        type="url" 
-                        class="webhook-input" 
-                        id="webhookUrl" 
-                        placeholder="https://tu-webhook-endpoint.com" 
-                        required
-                    >
+                    <input type="url" class="webhook-input" id="webhookUrl" placeholder="https://tu-webhook-endpoint.com" required>
                 </div>
                 <button type="submit" class="webhook-button">
                     <i class='bx bx-save'></i>
@@ -849,7 +976,46 @@
         </div>
     </div>
 
-    <!-- Image viewer modal -->
+    <div class="modal ai-analysis-modal" id="aiAnalysisModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Análisis con IA</h2>
+                <button class="modal-close" id="closeAiAnalysisModal">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <div class="ai-analysis-content" id="aiAnalysisContent">
+                <img src="/placeholder.svg" alt="Imagen analizada" class="ai-analysis-image" id="aiAnalysisImage">
+                <div class="ai-analysis-badges" id="aiAnalysisBadges"></div>
+                <div class="ai-analysis-result" id="aiAnalysisResult">
+                    Esperando análisis...
+                </div>
+            </div>
+            <div class="ai-analysis-loading" id="aiAnalysisLoading">
+                <div class="ai-analysis-spinner"></div>
+                <p>Analizando imagen con IA...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal ai-analysis-detail-modal" id="aiAnalysisDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Detalle de Análisis</h2>
+                <button class="modal-close" id="closeAiAnalysisDetailModal">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <div class="ai-analysis-content">
+                <img src="/placeholder.svg" alt="Imagen analizada" class="ai-analysis-image" id="aiAnalysisDetailImage">
+                <div class="ai-analysis-badges" id="aiAnalysisDetailBadges"></div>
+                <div class="ai-analysis-result" id="aiAnalysisDetailResult">
+                    Esperando análisis...
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="image-viewer-modal" id="imageViewerModal">
         <div class="image-viewer-content">
             <button class="image-viewer-close" id="imageViewerClose">
@@ -873,11 +1039,9 @@
     </div>
 
     <script>
-        // Theme toggle functionality
+        // Tema y actualización de video feed
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('i');
-        
-        // Check for saved theme preference or use system preference
         const savedTheme = localStorage.getItem('theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         
@@ -899,33 +1063,83 @@
             }
         });
 
-        // Video feed refresh
         const img = document.querySelector('.video-feed');
-        setInterval(() => {
-            img.src = '/video_feed?' + new Date().getTime();
-        }, 1000);
+        setInterval(() => img.src = '/video_feed?' + new Date().getTime(), 100);
 
-        // Modal functionality
+        // Elementos del DOM
         const modal = document.getElementById('configModal');
         const openConfigBtn = document.getElementById('openConfig');
         const closeModalBtn = document.getElementById('closeModal');
         const webhookForm = document.getElementById('webhookForm');
+        const aiAnalysisModal = document.getElementById('aiAnalysisModal');
+        const aiAnalysisImage = document.getElementById('aiAnalysisImage');
+        const aiAnalysisResult = document.getElementById('aiAnalysisResult');
+        const aiAnalysisLoading = document.getElementById('aiAnalysisLoading');
+        const closeAiAnalysisModal = document.getElementById('closeAiAnalysisModal');
+        const analyzeButton = document.getElementById('analyzeButton');
+        const aiAnalysisContent = document.getElementById('aiAnalysisContent');
+        const aiAnalysisBadges = document.getElementById('aiAnalysisBadges');
+        const aiAnalysisDetailModal = document.getElementById('aiAnalysisDetailModal');
+        const aiAnalysisDetailImage = document.getElementById('aiAnalysisDetailImage');
+        const aiAnalysisDetailResult = document.getElementById('aiAnalysisDetailResult');
+        const aiAnalysisDetailBadges = document.getElementById('aiAnalysisDetailBadges');
+        const closeAiAnalysisDetailModal = document.getElementById('closeAiAnalysisDetailModal');
+        const autoAnalysisToggle = document.getElementById('autoAnalysisToggle');
+        const analyzeAllToggle = document.getElementById('analyzeAllToggle');
+        const disableAnalysisToggle = document.getElementById('disableAnalysisToggle');
+        const recentAnalysisCarousel = document.getElementById('recentAnalysisCarousel');
+        const notificationsList = document.getElementById('notificationsList');
+        const exportButton = document.getElementById('exportButton');
+        let notificationsData = [];
+        let autoAnalysisInterval = null;
+        const ANALYSIS_INTERVAL = 5000;
 
-        openConfigBtn.addEventListener('click', () => {
-            modal.style.display = 'flex';
-        });
+        // Configuración del modal
+        openConfigBtn.addEventListener('click', () => modal.style.display = 'flex');
+        closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
 
-        closeModalBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
+        // Análisis con IA
+        analyzeButton.addEventListener('click', async () => {
+            aiAnalysisModal.style.display = 'flex';
+            aiAnalysisContent.style.display = 'none';
+            aiAnalysisLoading.style.display = 'flex';
+            try {
+                const imageBase64 = await getLatestNotificationFrame();
+                aiAnalysisImage.src = `data:image/jpeg;base64,${imageBase64}`;
+                const analysisResult = await analyzeImageWithAI(imageBase64);
+                renderAnalysisResult(analysisResult, aiAnalysisResult, aiAnalysisBadges);
+                aiAnalysisLoading.style.display = 'none';
+                aiAnalysisContent.style.display = 'flex';
+            } catch (error) {
+                aiAnalysisResult.textContent = `Error: ${error.message}`;
+                aiAnalysisBadges.innerHTML = '';
+                aiAnalysisLoading.style.display = 'none';
+                aiAnalysisContent.style.display = 'flex';
+                showToast('error', 'Error de análisis', error.message);
             }
         });
 
-        // Image viewer modal functionality
+        closeAiAnalysisModal.addEventListener('click', () => aiAnalysisModal.style.display = 'none');
+        aiAnalysisModal.addEventListener('click', (e) => { if (e.target === aiAnalysisModal) aiAnalysisModal.style.display = 'none'; });
+        closeAiAnalysisDetailModal.addEventListener('click', () => aiAnalysisDetailModal.style.display = 'none');
+        aiAnalysisDetailModal.addEventListener('click', (e) => { if (e.target === aiAnalysisDetailModal) aiAnalysisDetailModal.style.display = 'none'; });
+
+        async function analyzeImageWithAI(imageBase64) {
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: imageBase64 })
+                });
+                if (!response.ok) throw new Error(`Error: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                return { severity: 'neutral', situation: 'Error', description: error.message };
+            }
+        }
+
+        // Image Viewer
         const imageViewerModal = document.getElementById('imageViewerModal');
         const imageViewerImg = document.getElementById('imageViewerImg');
         const imageViewerClose = document.getElementById('imageViewerClose');
@@ -935,206 +1149,138 @@
             imageViewerModal.style.display = 'flex';
         }
 
-        imageViewerClose.addEventListener('click', () => {
-            imageViewerModal.style.display = 'none';
-        });
+        imageViewerClose.addEventListener('click', () => imageViewerModal.style.display = 'none');
+        imageViewerModal.addEventListener('click', (e) => { if (e.target === imageViewerModal) imageViewerModal.style.display = 'none'; });
 
-        imageViewerModal.addEventListener('click', (e) => {
-            if (e.target === imageViewerModal) {
-                imageViewerModal.style.display = 'none';
-            }
-        });
-
-        // Toast notification system
-        const toast = document.getElementById('toast');
-        const toastTitle = document.getElementById('toastTitle');
-        const toastMessage = document.getElementById('toastMessage');
-        const toastClose = document.getElementById('toastClose');
-        const toastIcon = toast.querySelector('.toast-icon i');
-
+        // Toast
         function showToast(type, title, message, duration = 3000) {
-            toast.className = 'toast ' + type;
-            toastTitle.textContent = title;
-            toastMessage.textContent = message;
-            
-            if (type === 'success') {
-                toastIcon.className = 'bx bx-check-circle';
-            } else if (type === 'error') {
-                toastIcon.className = 'bx bx-error-circle';
-            }
-            
+            const toast = document.getElementById('toast');
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            toast.className = `toast ${type}`;
             toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
+            setTimeout(() => toast.classList.remove('show'), duration);
         }
 
-        toastClose.addEventListener('click', () => {
-            toast.classList.remove('show');
-        });
+        document.getElementById('toastClose').addEventListener('click', () => document.getElementById('toast').classList.remove('show'));
 
-        // Webhook form submission
         webhookForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const url = document.getElementById('webhookUrl').value;
-            
             try {
                 const response = await fetch('/set_webhook', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ webhook_url: url })
                 });
-                
                 if (response.ok) {
-                    showToast('success', 'Webhook guardado', 'La URL del webhook se ha guardado correctamente');
+                    showToast('success', 'Webhook guardado', 'URL guardada correctamente');
                     modal.style.display = 'none';
                 } else {
-                    showToast('error', 'Error', 'No se pudo guardar la URL del webhook');
+                    showToast('error', 'Error', 'No se pudo guardar la URL');
                 }
             } catch (error) {
                 showToast('error', 'Error de conexión', error.message);
             }
         });
 
-        // Function to format relative time
+        // Funciones de utilidad
         function formatRelativeTime(dateString) {
             const date = new Date(dateString);
             const now = new Date();
             const diffInSeconds = Math.floor((now - date) / 1000);
-            
-            if (isNaN(diffInSeconds)) {
-                return dateString; // Return original if parsing failed
-            }
-            
-            // Just now
-            if (diffInSeconds < 5) {
-                return "Justo ahora";
-            }
-            
-            // Less than a minute
-            if (diffInSeconds < 60) {
-                return "Hace unos segundos";
-            }
-            
-            // Minutes
+            if (isNaN(diffInSeconds)) return dateString;
+            if (diffInSeconds < 5) return "Justo ahora";
+            if (diffInSeconds < 60) return "Hace unos segundos";
             const diffInMinutes = Math.floor(diffInSeconds / 60);
-            if (diffInMinutes === 1) {
-                return "Hace un minuto";
-            }
-            if (diffInMinutes < 60) {
-                return `Hace ${diffInMinutes} minutos`;
-            }
-            
-            // Hours
+            if (diffInMinutes < 60) return diffInMinutes === 1 ? "Hace un minuto" : `Hace ${diffInMinutes} minutos`;
             const diffInHours = Math.floor(diffInMinutes / 60);
-            if (diffInHours === 1) {
-                return "Hace una hora";
-            }
-            if (diffInHours < 24) {
-                return `Hace ${diffInHours} horas`;
-            }
-            
-            // Days
+            if (diffInHours < 24) return diffInHours === 1 ? "Hace una hora" : `Hace ${diffInHours} horas`;
             const diffInDays = Math.floor(diffInHours / 24);
-            if (diffInDays === 1) {
-                return "Hace un día";
-            }
-            if (diffInDays < 7) {
-                return `Hace ${diffInDays} días`;
-            }
-            
-            // Weeks
-            const diffInWeeks = Math.floor(diffInDays / 7);
-            if (diffInWeeks === 1) {
-                return "Hace una semana";
-            }
-            if (diffInWeeks < 4) {
-                return `Hace ${diffInWeeks} semanas`;
-            }
-            
-            // Months
-            const diffInMonths = Math.floor(diffInDays / 30);
-            if (diffInMonths === 1) {
-                return "Hace un mes";
-            }
-            if (diffInMonths < 12) {
-                return `Hace ${diffInMonths} meses`;
-            }
-            
-            // Years
-            const diffInYears = Math.floor(diffInDays / 365);
-            if (diffInYears === 1) {
-                return "Hace un año";
-            }
-            return `Hace ${diffInYears} años`;
+            if (diffInDays < 7) return diffInDays === 1 ? "Hace un día" : `Hace ${diffInDays} días`;
+            return dateString;
         }
 
-        // Faces carousel functionality
+        function getSeverityClass(severity) {
+            if (!severity) return 'neutral';
+            severity = severity.toLowerCase();
+            if (severity === 'neutral' || severity === 'normal') return 'neutral'; // Verde
+            if (severity === 'medio' || severity === 'medium' || severity === 'warning') return 'medium'; // Amarillo
+            if (severity === 'crítico' || severity === 'critico' || severity === 'critical' || severity === 'danger') return 'critical'; // Rojo
+            return 'neutral'; // Default
+        }
+
+        // Checkbox exclusivo
+        const checkboxes = [autoAnalysisToggle, analyzeAllToggle, disableAnalysisToggle];
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false; // Por defecto desactivado
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    checkboxes.forEach(cb => {
+                        if (cb !== checkbox) cb.checked = false;
+                    });
+                    handleCheckboxChange(checkbox);
+                }
+            });
+        });
+
+        function handleCheckboxChange(checkbox) {
+            if (checkbox === autoAnalysisToggle && checkbox.checked) {
+                startAutoAnalysis();
+                showToast('success', 'Análisis automático', 'Activado cada 5s');
+            } else if (checkbox === analyzeAllToggle && checkbox.checked) {
+                analyzeAllNotifications();
+                checkbox.checked = false; // Se desactiva tras ejecutar
+                showToast('success', 'Análisis completo', 'Todas las notificaciones analizadas');
+            } else if (checkbox === disableAnalysisToggle && checkbox.checked) {
+                stopAutoAnalysis();
+                showToast('success', 'Análisis desactivado', 'Todo análisis detenido');
+            } else {
+                stopAutoAnalysis();
+            }
+        }
+
+        // Notificaciones y carrusel
         const facesCarousel = document.getElementById('facesCarousel');
-        let uniqueFaces = new Set(); // Store unique face images
+        let uniqueFaces = new Set();
 
         function addFaceToCarousel(faceBase64) {
-            // Skip if this face is already in the carousel
-            if (uniqueFaces.has(faceBase64)) {
-                return;
-            }
-            
-            // Add to our set of unique faces
+            if (uniqueFaces.has(faceBase64)) return;
             uniqueFaces.add(faceBase64);
-            
-            // Remove empty placeholder if it exists
             const emptyPlaceholder = facesCarousel.querySelector('.face-bubble-empty');
-            if (emptyPlaceholder) {
-                facesCarousel.removeChild(emptyPlaceholder);
-            }
-            
-            // Create face bubble
+            if (emptyPlaceholder) facesCarousel.removeChild(emptyPlaceholder);
             const faceBubble = document.createElement('div');
             faceBubble.className = 'face-bubble';
-            
             const faceImg = document.createElement('img');
             faceImg.src = `data:image/jpeg;base64,${faceBase64}`;
             faceImg.alt = 'Rostro detectado';
-            
             faceBubble.appendChild(faceImg);
-            faceBubble.addEventListener('click', () => {
-                openImageViewer(faceImg.src);
-            });
-            
-            // Add to carousel
+            faceBubble.addEventListener('click', () => openImageViewer(faceImg.src));
             facesCarousel.appendChild(faceBubble);
-            
-            // Scroll to the end to show the newest face
             facesCarousel.scrollLeft = facesCarousel.scrollWidth;
         }
-
-        // Notifications functionality
-        const notificationsList = document.getElementById('notificationsList');
-        const notificationsCount = document.getElementById('notificationsCount');
-        let notificationsData = [];
 
         async function updateNotifications() {
             try {
                 const response = await fetch('/get_notifications');
                 const notifications = await response.json();
-                
-                // Update count
-                notificationsCount.textContent = notifications.length;
-                
-                // Only update DOM if there are new notifications
                 if (JSON.stringify(notifications) !== JSON.stringify(notificationsData)) {
-                    notificationsData = notifications;
-                    renderNotifications(notifications);
-                    
-                    // Update faces carousel with all faces from notifications
-                    notifications.forEach(notif => {
-                        if (notif.faces_detected > 0 && notif.face_rois && notif.face_rois.length > 0) {
-                            notif.face_rois.forEach(roi => {
-                                addFaceToCarousel(roi);
-                            });
+                    const existingAnalyses = {};
+                    notificationsData.forEach(notif => {
+                        if (notif.analysis) existingAnalyses[notif.timestamp] = notif.analysis;
+                    });
+                    notificationsData = notifications.map(notif => ({
+                        ...notif,
+                        analysis: existingAnalyses[notif.timestamp] || notif.analysis
+                    }));
+                    renderNotifications(notificationsData);
+                    updateRecentAnalysisCarousel(notificationsData);
+                    notificationsData.forEach(notif => {
+                        if (notif.faces_detected > 0 && notif.face_rois) {
+                            notif.face_rois.forEach(roi => addFaceToCarousel(roi));
                         }
                     });
+                    if (autoAnalysisToggle.checked) runAutoAnalysis();
                 }
             } catch (error) {
                 console.error('Error al actualizar notificaciones:', error);
@@ -1143,131 +1289,218 @@
 
         function renderNotifications(notifications) {
             notificationsList.innerHTML = '';
-            
             if (notifications.length === 0) {
-                const emptyMessage = document.createElement('div');
-                emptyMessage.style.textAlign = 'center';
-                emptyMessage.style.padding = '2rem 0';
-                emptyMessage.style.color = 'var(--text-secondary)';
-                emptyMessage.innerHTML = '<i class="bx bx-bell-off" style="font-size: 2rem; margin-bottom: 0.5rem;"></i><p>No hay notificaciones</p>';
-                notificationsList.appendChild(emptyMessage);
+                notificationsList.innerHTML = '<div style="text-align: center; padding: 2rem 0; color: var(--text-secondary);"><i class="bx bx-bell-off" style="font-size: 2rem;"></i><p>No hay notificaciones</p></div>';
                 return;
             }
-            
+
             notifications.forEach(notif => {
                 const li = document.createElement('li');
                 li.className = 'notification-item';
-                
+                const severityClass = notif.analysis ? getSeverityClass(notif.analysis.severity) : 'neutral';
+                li.classList.add(severityClass);
+
                 const header = document.createElement('div');
                 header.className = 'notification-header';
-                
+
                 const title = document.createElement('div');
                 title.className = 'notification-title';
-                
-                // Add appropriate icon based on detection
-                if (notif.faces_detected > 0) {
-                    title.innerHTML = `<i class='bx bx-face'></i>`;
-                } else {
-                    title.innerHTML = `<i class='bx bx-movement'></i>`;
+                title.innerHTML = (notif.faces_detected > 0 ? `<i class='bx bx-face'></i>` : `<i class='bx bx-movement'></i>`) +
+                    `<span>${notif.motion_objects} movimiento(s), ${notif.faces_detected} rostro(s)</span>`;
+
+                if (notif.analysis) {
+                    const badge = document.createElement('div');
+                    badge.className = `notification-analysis-badge ${severityClass}`;
+                    badge.innerHTML = `<i class='bx bx-shield-quarter'></i> ${notif.analysis.severity}`;
+                    title.appendChild(badge);
                 }
-                
-                title.innerHTML += `<span>${notif.motion_objects} movimiento(s), ${notif.faces_detected} rostro(s)</span>`;
-                
+
                 const timestamp = document.createElement('span');
                 timestamp.className = 'notification-timestamp';
                 timestamp.textContent = formatRelativeTime(notif.timestamp);
-                timestamp.title = notif.timestamp; // Original timestamp as tooltip
-                
+                timestamp.title = notif.timestamp;
+
                 header.appendChild(title);
                 header.appendChild(timestamp);
-                
+
                 const content = document.createElement('div');
                 content.className = 'notification-content';
-                
-                // Only add motion details if there are motion objects
-                if (notif.motion_objects > 0 && notif.motion_rois && notif.motion_rois.length > 0) {
-                    const motionDetails = document.createElement('div');
-                    motionDetails.className = 'motion-details';
-                    notif.motion_rois.forEach(roi => {
-                        const img = document.createElement('img');
-                        img.className = 'motion-roi';
-                        img.src = `data:image/jpeg;base64,${roi}`;
-                        img.alt = 'Área de movimiento';
-                        img.addEventListener('click', () => {
-                            openImageViewer(img.src);
-                        });
-                        motionDetails.appendChild(img);
-                    });
-                    content.appendChild(motionDetails);
-                }
-                
-                // Only add face details if there are faces detected
-                if (notif.faces_detected > 0 && notif.face_rois && notif.face_rois.length > 0) {
-                    const faceDetails = document.createElement('div');
-                    faceDetails.className = 'face-details';
-                    notif.face_rois.forEach(roi => {
-                        const img = document.createElement('img');
-                        img.className = 'face-roi';
-                        img.src = `data:image/jpeg;base64,${roi}`;
-                        img.alt = 'Rostro detectado';
-                        img.addEventListener('click', () => {
-                            openImageViewer(img.src);
-                        });
-                        faceDetails.appendChild(img);
-                    });
-                    content.appendChild(faceDetails);
-                }
-                
-                // Add the full frame image
                 if (notif.frame) {
                     const frameImg = document.createElement('img');
                     frameImg.className = 'notification-frame';
                     frameImg.src = `data:image/jpeg;base64,${notif.frame}`;
                     frameImg.alt = 'Imagen completa';
-                    frameImg.addEventListener('click', () => {
-                        openImageViewer(frameImg.src);
-                    });
+                    frameImg.addEventListener('click', () => openImageViewer(frameImg.src));
                     content.appendChild(frameImg);
                 }
-                
+
                 li.appendChild(header);
                 li.appendChild(content);
-                notificationsList.prepend(li);
+                if (notif.analysis || notif.motion_objects > 0) {
+                    li.addEventListener('click', (e) => {
+                        if (e.target.tagName !== 'IMG') showAnalysisDetail(notif);
+                    });
+                }
+
+                notificationsList.appendChild(li);
+                requestAnimationFrame(() => {
+                    notificationsList.scrollTop = notificationsList.scrollHeight;
+                });
             });
         }
 
-        // Update timestamps every minute
-        function updateTimestamps() {
-            const timestamps = document.querySelectorAll('.notification-timestamp');
-            timestamps.forEach(timestamp => {
-                const originalTime = timestamp.title;
-                if (originalTime) {
-                    timestamp.textContent = formatRelativeTime(originalTime);
+        function updateRecentAnalysisCarousel(notifications) {
+            const analyzedNotifications = notifications.filter(notif => notif.analysis || notif.motion_objects > 0);
+            if (analyzedNotifications.length === 0) {
+                recentAnalysisCarousel.innerHTML = '<div style="padding: 0.75rem; color: var(--text-secondary);">Sin análisis recientes</div>';
+                return;
+            }
+
+            const existingItems = new Map();
+            Array.from(recentAnalysisCarousel.children).forEach(item => {
+                if (item.dataset.timestamp) existingItems.set(item.dataset.timestamp, item);
+            });
+
+            analyzedNotifications.forEach(notif => {
+                let item = existingItems.get(notif.timestamp);
+                if (!item) {
+                    item = document.createElement('div');
+                    item.className = 'recent-analysis-item';
+                    item.dataset.timestamp = notif.timestamp;
+                    recentAnalysisCarousel.appendChild(item);
                 }
+
+                const severityClass = notif.analysis ? getSeverityClass(notif.analysis.severity) : 'neutral';
+                item.className = `recent-analysis-item ${severityClass}`;
+
+                item.innerHTML = '';
+                const preview = document.createElement('img');
+                preview.className = 'recent-analysis-preview';
+                preview.src = `data:image/jpeg;base64,${notif.frame}`;
+                preview.alt = 'Preview del análisis';
+
+                const timestamp = document.createElement('div');
+                timestamp.className = 'recent-analysis-timestamp';
+                timestamp.textContent = formatRelativeTime(notif.timestamp);
+                timestamp.title = notif.timestamp;
+
+                item.appendChild(preview);
+                item.appendChild(timestamp);
+                item.addEventListener('click', () => showAnalysisDetail(notif));
+            });
+
+            requestAnimationFrame(() => {
+                recentAnalysisCarousel.scrollLeft = recentAnalysisCarousel.scrollWidth;
             });
         }
 
-        // Initial notifications update and set intervals
-        updateNotifications();
-        setInterval(updateNotifications, 2000);
-        setInterval(updateTimestamps, 60000); // Update relative times every minute
+        function showAnalysisDetail(notification) {
+            aiAnalysisDetailImage.src = `data:image/jpeg;base64,${notification.frame}`;
+            renderAnalysisResult(notification.analysis || { severity: 'neutral', situation: 'Movimiento', description: 'Se detectó movimiento sin análisis de IA' }, aiAnalysisDetailResult, aiAnalysisDetailBadges);
+            aiAnalysisDetailModal.style.display = 'flex';
+        }
 
-        // Load saved webhook URL if available
-        async function loadSavedWebhook() {
-            try {
-                const response = await fetch('/get_webhook');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.webhook_url) {
-                        document.getElementById('webhookUrl').value = data.webhook_url;
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading webhook:', error);
+        function renderAnalysisResult(result, resultElement, badgesElement) {
+            resultElement.textContent = result.description;
+            badgesElement.innerHTML = '';
+            const severityClass = getSeverityClass(result.severity);
+            badgesElement.innerHTML = `
+                <div class="ai-badge ${severityClass}"><i class='bx bx-shield-quarter'></i> ${result.severity}</div>
+                <div class="ai-badge ${severityClass}"><i class='bx bx-info-circle'></i> ${result.situation}</div>
+            `;
+        }
+
+        // Análisis automático
+        function startAutoAnalysis() {
+            if (autoAnalysisInterval) return;
+            runAutoAnalysis();
+            autoAnalysisInterval = setInterval(runAutoAnalysis, ANALYSIS_INTERVAL);
+        }
+
+        function stopAutoAnalysis() {
+            if (autoAnalysisInterval) {
+                clearInterval(autoAnalysisInterval);
+                autoAnalysisInterval = null;
             }
         }
-        
-        loadSavedWebhook();
+
+        async function runAutoAnalysis() {
+            try {
+                const imageBase64 = await getLatestNotificationFrame();
+                const analysisResult = await analyzeImageWithAI(imageBase64);
+                if (notificationsData.length > 0 && !notificationsData[notificationsData.length - 1].analysis) {
+                    notificationsData[notificationsData.length - 1].analysis = analysisResult;
+                    renderNotifications(notificationsData);
+                    updateRecentAnalysisCarousel(notificationsData);
+                }
+            } catch (error) {
+                console.error('Error en análisis automático:', error);
+            }
+        }
+
+        async function analyzeAllNotifications() {
+            if (notificationsData.length === 0) {
+                showToast('error', 'Análisis fallido', 'No hay notificaciones');
+                return;
+            }
+            for (let i = 0; i < notificationsData.length; i++) {
+                if (!notificationsData[i].analysis && notificationsData[i].frame) {
+                    const analysisResult = await analyzeImageWithAI(notificationsData[i].frame);
+                    notificationsData[i].analysis = analysisResult;
+                }
+            }
+            renderNotifications(notificationsData);
+            updateRecentAnalysisCarousel(notificationsData);
+        }
+
+        function getLatestNotificationFrame() {
+            return new Promise((resolve, reject) => {
+                if (!notificationsData.length) reject(new Error('No hay notificaciones'));
+                const latest = notificationsData[notificationsData.length - 1];
+                if (!latest.frame) reject(new Error('Sin frame en la última notificación'));
+                resolve(latest.frame);
+            });
+        }
+
+        // Exportar CSV
+        function exportToCSV() {
+            if (notificationsData.length === 0) {
+                showToast('error', 'Exportación fallida', 'No hay notificaciones para exportar');
+                return;
+            }
+            const headers = ['Timestamp', 'Motion Objects', 'Faces Detected', 'Analysis Severity', 'Analysis Situation', 'Analysis Description'];
+            const rows = notificationsData.map(notif => [
+                notif.timestamp,
+                notif.motion_objects,
+                notif.faces_detected,
+                notif.analysis ? notif.analysis.severity : '',
+                notif.analysis ? notif.analysis.situation : '',
+                notif.analysis ? notif.analysis.description : ''
+            ].map(val => `"${String(val).replace(/"/g, '""')}"`));
+            const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `notifications_${new Date().toISOString().replace(/:/g, '-')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast('success', 'Exportación exitosa', 'Notificaciones exportadas como CSV');
+        }
+
+        exportButton.addEventListener('click', exportToCSV);
+
+        // Inicialización
+        updateNotifications();
+        setInterval(updateNotifications, 2000);
+        setInterval(() => {
+            document.querySelectorAll('.notification-timestamp, .recent-analysis-timestamp')
+                .forEach(ts => ts.textContent = formatRelativeTime(ts.title));
+        }, 60000);
+
+        window.addEventListener('beforeunload', stopAutoAnalysis);
     </script>
 </body>
 </html>

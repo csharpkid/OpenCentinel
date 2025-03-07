@@ -1,15 +1,19 @@
-import cv2
 import threading
 import platform
-import numpy as np
 from flask import Flask, Response, render_template, request, jsonify
 import time
 import requests
 from collections import deque
 import base64
-import pytesseract
+from openai import OpenAI  # Added for OpenAI integration
+import os  # Added for environment variable handling
+import json
+import cv2
+import numpy as np
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+# Set OpenAI API key (preferably from environment variable)
+openai_api_key = os.getenv("OPENAI_API_KEY", "your-api-key-here")
+client = OpenAI(api_key=openai_api_key)
 
 app = Flask(__name__)
 
@@ -145,7 +149,6 @@ class MotionDetector:
                     motion_rois.append(motion_roi)
                     cv2.rectangle(frame, (x, y), (x + w, y + h), (165, 77, 17), 2)
 
-
             # Detección de rostros solo si hay movimiento, pero sin dibujar en la vista previa
             face_count = 0
             face_rois = []
@@ -181,6 +184,53 @@ class MotionDetector:
         if self.cap and self.cap.isOpened():
             self.cap.release()
 
+    def analyze_image_with_openai(self, frame):
+        """Analyze an image using OpenAI's gpt-4o-mini vision model."""
+        try:
+            # Convert frame to base64
+            _, buffer = cv2.imencode('.jpg', frame)
+            base64_image = base64.b64encode(buffer).decode('utf-8')
+
+            # Send to OpenAI API with strict JSON formatting
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": (
+                                    "Analyze this image and provide a detailed classification in strict JSON format:\n"
+                                    "1. Detect the situation in Spanish (e.g., 'armas de fuego detectadas', 'actividad sospechosa', 'escena normal').\n"
+                                    "2. Classify the severity level as 'Neutral', 'Medium', or 'Critical'.\n"
+                                    "3. Describe the scene in Spanish, including emotions of people (if present) and their clothing.\n"
+                                    "4. If vehicles are present, identify the model, color, and OCR any visible license plates.\n"
+                                    "Return the response as a JSON object with keys: 'situation', 'severity', 'description', 'vehicles'. "
+                                    "Ensure the response is a valid JSON string, enclosed in ```json``` marks, with no additional text outside the JSON."
+                                )
+                            },
+                            {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
+                        ]
+                    }
+                ],
+                max_tokens=300  # Increased to allow for detailed JSON response
+            )
+            # Extract and parse the JSON response
+            result = response.choices[0].message.content.strip()
+            # Remove ```json and ``` marks if present
+            if result.startswith("```json") and result.endswith("```"):
+                result = result[7:-3].strip()
+            return json.loads(result)  # Parse the JSON response from OpenAI
+        except Exception as e:
+            print(f"Error analyzing image with OpenAI: {e}")
+            return {
+                "situation": "Error durante el análisis",
+                "severity": "Neutral",
+                "description": f"Error: {str(e)}",
+                "vehicles": []
+            }
+
 detector = MotionDetector()
 
 @app.route('/video_feed')
@@ -205,6 +255,31 @@ def set_webhook():
 @app.route('/get_notifications', methods=['GET'])
 def get_notifications():
     return jsonify(detector.get_notifications())
+
+@app.route('/analyze', methods=['POST'])
+def analyze():
+    """API endpoint to analyze a single image."""
+    data = request.get_json()
+    if not data or 'image' not in data:
+        return jsonify({'error': 'Image data required'}), 400
+    
+    # Decode base64 image
+    try:
+        image_data = base64.b64decode(data['image'])
+        nparr = np.frombuffer(image_data, np.uint8)
+        frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        
+        # Analyze with OpenAI
+        analysis_result = detector.analyze_image_with_openai(frame)
+        
+        return jsonify(analysis_result), 200
+    except Exception as e:
+        return jsonify({
+            "situation": "Error durante el procesamiento",
+            "severity": "Neutral",
+            "description": f"Error: {str(e)}",
+            "vehicles": []
+        }), 500
 
 def run_app():
     app.run(host='0.0.0.0', port=5000, threaded=True)
